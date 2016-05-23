@@ -1,0 +1,101 @@
+﻿<div class="row"></div>
+<div layout-gt-sm="row">
+    <div flex="15">
+        <div>
+            <h3>Tarixlər</h3>
+            <ul class="nav nav-pills nav-stacked dates">
+                <li ng-repeat="dates in dateList| orderBy:'dates.dates':true"
+                    ng-click="valuesSetLi($index,dates.id)"
+                    ng-class="{ active:valuesIsSetLi($index) }"
+                    ng-init="$first?valuesSetLi($index,dates.id):''">
+                    <a href="">{{dates.description}}</a>
+                </li>
+            </ul>
+        </div>
+        <div>
+            <h3>Müəssisələr</h3>
+            <ul class="nav nav-pills nav-stacked departments">
+                <li ng-repeat="department in departmentList | orderBy:'department.departmentName'"
+                    ng-click="valuesSetDepartment($index,department.departmentCode)"
+                    ng-init="department.departmentCode==0?valuesSetDepartment($index,department.departmentCode):''"
+                    ng-class="{ active:valuesIsSetDepartment($index) }">
+                    <a href="">{{department.departmentName}}</a>
+                </li>
+            </ul>
+        </div>
+        <div>
+            <h3>Alətlər</h3>
+            <ul class="nav nav-pills nav-stacked dates">
+                <li ng-click="exportToExcel('debitTable',sheetName)"><a href="">Excel-ə çevir</a></li>
+            </ul>
+        </div>
+    </div>
+    <div flex="1"></div>
+    <div flex="80" ng-controller="newValuesController as newCtrl">
+        <h3>Debitor Kreditor</h3>
+        <section>
+            <div ng-cloak>
+                <md-content>
+                    <md-tabs class="md-bar" md-dynamic-height md-border-bottom>
+                        <md-tab label="Debit (250)">
+                            <md-content class="md-padding">
+                                <table id="debitTable" class="table table-striped table-bordered table-hover lastCenter">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Department</th>
+                                            <th ng-repeat="title in titleList |  filter: { typeInt:250 } as titleDebit"><div class="titles">{{title.title}}</div><hr /><div class="description">{{title.description}}</div></th>
+                                            <th>Cəmi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="value in totalValues.debit" class="repeat-item">
+                                            <td>{{$index+1}}</td>
+                                            <td>{{value.departmentName}}</td>
+                                            <td ng-repeat="title in titleDebit">{{ value[(title.title+'_'+title.description).toLowerCase()]}}</td>
+                                            <td>{{rightTotal('debit',value.departmentName,dateId)}}</td>
+                                        </tr>
+                                        <tr><td colspan="2">Cəmi</td>
+                                        <td ng-repeat="title in titleDebit"><b>{{totalRow('debit',(title.title+'_'+title.description).toLowerCase(),dateId) | number:2}}</b></td>                                        
+                                        <td></td>
+                                       </tr>
+                                    </tbody>
+                                </table>
+                            </md-content>
+                        </md-tab>
+                        <md-tab label="Kredit (630)">
+                            <md-content class="md-padding">
+                                <table class="table table-striped table-bordered table-hover lastCenter">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Department</th>
+                                            <th ng-repeat="title in titleList | filter: { typeInt:630 } as titleKredit">{{title.title}}<br />{{title.description}}</th>
+                                            <th>Cəmi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="value in totalValues.kredit" class="repeat-item">
+                                            <td>{{$index+1}}</td>
+                                            <td>{{value.departmentName}}</td>
+                                            <td ng-repeat="title in titleKredit">{{ value[title.title+'_'+title.description] }}</td>
+                                            <td>{{rightTotal('kredit',value.departmentName,dateId)}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">Cəmi</td>
+                                            <td ng-repeat="title in titleKredit"><b>{{totalRow('kredit',(title.title+'_'+title.description).toLowerCase(),dateId) | number:2}}</b></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </md-content>
+                        </md-tab>
+                    </md-tabs>
+                </md-content>
+            </div>
+        </section>
+
+    </div>
+
+</div>
+

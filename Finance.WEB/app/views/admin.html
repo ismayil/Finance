@@ -1,0 +1,329 @@
+﻿<div class="row"></div>
+<div layout-gt-sm="row">
+    <div flex="15">
+        <div>
+            <h3>Tarixlər</h3>
+            <ul class="nav nav-pills nav-stacked dates">
+                <li ng-class="{active:activeContent==1}" ng-init="activeContent=1" ng-click="activeContent=1"><a>İstifadəçilər</a></li>
+                <li ng-class="{active:activeContent==2}" ng-click="activeContent=2"><a>Müəssisələr</a></li>
+                <li ng-class="{active:activeContent==3}" ng-click="activeContent=3"><a>Hesabat dövrləri</a></li>
+                <li ng-class="{active:activeContent==4}" ng-click="activeContent=4"><a>İstiqamətlər</a></li>
+                <li ng-class="{active:activeContent==5}" ng-click="activeContent=5"><a>Təsdiqləmələr</a></li>
+            </ul>
+        </div>
+    </div>
+    <div flex="1"></div>
+    <div flex="80" ng-controller="adminUserController as userController" ng-show="activeContent==1">
+        <h3>İstifadəçilər</h3>
+        <section>
+            <div ng-cloak>
+                <md-content aria-autocomplete="both">
+                    <table class="table table-hover table-mc-light-blue">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>username</th>
+                                <th>Department</th>
+                                <th style="width:160px">sil</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="user in userController.userList" class="repeat-item">
+                                <td>{{ $index+1 }}</td>
+                                <td>{{ user.userName }}</td>
+                                <td>{{ user.departmentName}}</td>
+                                <td>
+                                    <div layout-mt-gs="row">
+                                        <md-button flex="45" class="md-raised md-warn" ng-click="userController.showConfirm($event,user.id,$index)">
+                                            <i class="glyphicon glyphicon-trash"></i> sil
+                                        </md-button>
+                                        <md-button flex="45" class="md-raised md-primary pull-right" ng-click="userController.thisUser=user;userController.thisUser.index=$index">
+                                            <i class="glyphicon glyphicon-edit"></i> DƏYİŞ
+                                        </md-button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr ng-hide="localLockStatus">
+                                <td colspan="4">
+                                    <form novalidate name="reviewForm"
+                                          ng-submit="reviewForm.$valid && userController.editUser(userController.thisUser)">
+                                        <div layout-gt-sm="row">
+                                            <div flex="40" class="md-select-backdrop">
+
+                                                <md-input-container>
+                                                    <input class="form-control" required ng-model="userController.thisUser.userName" type="text" />
+                                                </md-input-container>
+                                            </div>
+                                            <div flex="1"></div>
+                                            <div flex="40">
+                                                <md-select-container>
+                                                    <select required ng-model="userController.thisUser.department" class="form-control" ng-options="val as val.departmentName for (key,val) in userController.departmentList">
+                                                        <option value="">Məssisə seçin</option>
+                                                    </select>
+                                                </md-select-container>
+                                            </div>
+                                            <div flex="1"></div>
+                                            <div flex="10">
+                                                <input type="hidden" name="userId" ng-model="userController.thisUser.id" />
+                                                <input type="hidden" name="userIndex" ng-model="userController.thisUser.index" />
+                                                <md-button class="md-warn md-raised pull-right" type="submit">
+                                                    <i class="glyphicon glyphicon-saved"></i> yadda saxla
+                                                </md-button>
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </md-content>
+            </div>
+        </section>
+
+    </div>
+    <div flex="80" ng-controller="adminDepartmentController as departmentController" ng-show="activeContent==2">
+        <h3>Müəssisələr</h3>
+        <section>
+            <div ng-cloak>
+                <md-content aria-autocomplete="both">
+                    <table class="table table-hover table-mc-light-blue">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Code</th>
+                                <th style="width:160px">sil</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="department in departmentController.departmentList track by $index" class="repeat-item">
+                                <td>{{ $index+1 }}</td>
+                                <td>{{ department.departmentName }}</td>
+                                <td>{{ department.departmentCode}}</td>
+                                <td>
+                                    <div layout-mt-gs="row">
+                                        <md-button flex="45" class="md-raised md-warn" ng-click="departmentController.showConfirm($event,department.id,$index)">
+                                            <i class="glyphicon glyphicon-trash"></i> sil
+                                        </md-button>
+                                        <md-button flex="45" class="md-raised md-primary pull-right" ng-click="departmentController.thisDepartment=department;departmentController.thisDepartment.index=$index">
+                                            <i class="glyphicon glyphicon-edit"></i> DƏYİŞ
+                                        </md-button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr ng-hide="localLockStatus">
+                                <td colspan="4">
+                                    <form novalidate name="reviewForm"
+                                          ng-submit="reviewForm.$valid && departmentController.editDepartment(departmentController.thisDepartment)">
+                                        <div layout-gt-sm="row">
+                                            <div flex="40" class="md-select-backdrop">
+
+                                                <md-input-container>
+                                                    <input class="form-control" required ng-model="departmentController.thisDepartment.departmentName" type="text" />
+                                                </md-input-container>
+                                            </div>
+                                            <div flex="1"></div>
+                                            <div flex="40">
+                                                <md-input-container>
+                                                    <input class="form-control" required ng-model="departmentController.thisDepartment.departmentCode" type="text" />
+                                                </md-input-container>
+                                            </div>
+                                            <div flex="1"></div>
+                                            <div flex="10">
+                                                <input type="hidden" name="departmentId" ng-model="departmentController.thisDepartment.id" />
+                                                <input type="hidden" name="departmentIndex" ng-model="departmentController.thisDepartment.index" />
+                                                <md-button class="md-warn md-raised pull-right" type="submit">
+                                                    <i class="glyphicon glyphicon-saved"></i> yadda saxla
+                                                </md-button>
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </md-content>
+            </div>
+        </section>
+
+    </div>
+    <div flex="80" ng-controller="adminDateController as dateController" ng-show="activeContent==3">
+        <h3>Müəssisələr</h3>
+        <section>
+            <div ng-cloak>
+                <md-content aria-autocomplete="both">
+                    <table class="table table-hover table-mc-light-blue">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Code</th>
+                                <th style="width:160px">sil</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="dates in dateController.dateList" class="repeat-item">
+                                <td>{{ $index+1 }}</td>
+                                <td>{{ dates.dates }}</td>
+                                <td>{{ dates.description}}</td>
+                                <td>
+                                    <div layout-mt-gs="row">
+                                        <md-button flex="45" class="md-raised md-warn" ng-click="dateController.showConfirm($event,dates.id,$index)">
+                                            <i class="glyphicon glyphicon-trash"></i> sil
+                                        </md-button>
+                                        <md-button flex="45" class="md-raised md-primary pull-right" ng-click="dateController.thisDate=dates;dateController.thisDate.index=$index">
+                                            <i class="glyphicon glyphicon-edit"></i> DƏYİŞ
+                                        </md-button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr ng-hide="localLockStatus">
+                                <td colspan="4">
+                                    <form novalidate name="reviewForm"
+                                          ng-submit="reviewForm.$valid && dateController.editDate(dateController.thisDate)">
+                                        <div layout-gt-sm="row">
+                                            <div flex="40" class="md-select-backdrop">
+                                                <md-input-container>
+                                                    <input pattern="[0-9]{2}.[0-9]{2}.[0-9]{4}" class="form-control" required ng-model="dateController.thisDate.dates" type="text" />
+                                                </md-input-container>
+                                            </div>
+                                            <div flex="1"></div>
+                                            <div flex="40">
+                                                <md-input-container>
+                                                    <input class="form-control" required ng-model="dateController.thisDate.description" type="text" />
+                                                </md-input-container>
+                                            </div>
+                                            <div flex="1"></div>
+                                            <div flex="10">
+                                                <input type="hidden" name="dateId" ng-model="dateController.thisDepartment.id" />
+                                                <input type="hidden" name="dateIndex" ng-model="dateController.thisDepartment.index" />
+                                                <md-button class="md-warn md-raised pull-right" type="submit">
+                                                    <i class="glyphicon glyphicon-saved"></i> yadda saxla
+                                                </md-button>
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </md-content>
+            </div>
+        </section>
+
+    </div>
+    <div flex="80" ng-controller="adminTitleController as titleController" ng-show="activeContent==4">
+        <h3>Müəssisələr</h3>
+        <section>
+            <div ng-cloak>
+                <md-content aria-autocomplete="both">
+                    <table class="table table-hover table-mc-light-blue">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th style="width:160px">sil</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="title in titleController.titleList track by $index" class="repeat-item">
+                                <td>{{ $index+1 }}</td>
+                                <td>{{ title.title }}</td>
+                                <td>{{ title.description}}</td>
+                                <td>
+                                    <div layout-mt-gs="row">
+                                        <md-button flex="45" class="md-raised md-warn" ng-click="titleController.showConfirm($event,title.id,$index)">
+                                            <i class="glyphicon glyphicon-trash"></i> sil
+                                        </md-button>
+                                        <md-button flex="45" class="md-raised md-primary pull-right" ng-click="titleController.thisTitle=title;titleController.thisTitle.index=$index">
+                                            <i class="glyphicon glyphicon-edit"></i> DƏYİŞ
+                                        </md-button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr ng-hide="localLockStatus">
+                                <td colspan="4">
+                                    <form novalidate name="reviewForm"
+                                          ng-submit="reviewForm.$valid && titleController.editTitle(titleController.thisTitle)">
+                                        <div layout-gt-sm="row">
+                                            <div flex="40" class="md-select-backdrop">
+
+                                                <md-input-container>
+                                                    <input class="form-control" required ng-model="titleController.thisTitle.title" type="text" />
+                                                </md-input-container>
+                                            </div>
+                                            <div flex="1"></div>
+                                            <div flex="40">
+                                                <md-input-container>
+                                                    <input class="form-control" required ng-model="titleController.thisTitle.description" type="text" />
+                                                </md-input-container>
+                                            </div>
+                                            <div flex="1"></div>
+                                            <div flex="10">
+                                                <input type="hidden" name="titleId" ng-model="titleController.thisTitle.id" />
+                                                <input type="hidden" name="titleIndex" ng-model="titleController.thisTitle.index" />
+                                                <md-button class="md-warn md-raised pull-right" type="submit">
+                                                    <i class="glyphicon glyphicon-saved"></i> yadda saxla
+                                                </md-button>
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </md-content>
+            </div>
+        </section>
+
+    </div>
+    <div flex="80" ng-controller="adminLockController as lockController" ng-show="activeContent==5">
+        <h3>Müəssisələr</h3>
+        <section>
+            <div ng-cloak>
+                <md-content aria-autocomplete="both">
+                    <table class="table table-hover table-mc-light-blue">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Department</th>
+                                <th>Date</th>
+                                <th>Local</th>
+                                <th>Remote</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="lock in lockController.lockList track by $index" class="repeat-item">
+                                <td>{{ $index+1 }}</td>
+                                <td>{{ lock.departmentName }}</td>
+                                <td>{{ lock.dates}}</td>
+                                <td>
+                                    <md-checkbox ng-model="lock.localStatus" aria-label="Local">
+                                        Local
+                                    </md-checkbox>
+                                </td>
+                                <td>
+                                    <md-checkbox ng-model="lock.remoteStatus" aria-label="Remote">
+                                        Remote
+                                    </md-checkbox>
+                                </td>
+                                <td>
+                                    <md-button class="md-raised md-primary pull-right" ng-click="lockController.updateLock(lock,$index)">
+                                        <i class="glyphicon glyphicon-edit"></i> DƏYİŞ
+                                    </md-button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </md-content>
+            </div>
+        </section>
+
+    </div>
+</div>
+

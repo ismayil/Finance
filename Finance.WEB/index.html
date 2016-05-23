@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html>
+<html data-ng-app="FinanceApp">
+<head>
+    <meta content="IE=edge, chrome=1" http-equiv="X-UA-Compatible" />
+    <title>Debit & Kredit</title>
+    <link href="content/bootstrap.min.css" rel="stylesheet" />
+    <link href="content/font-awesome.min.css" rel="stylesheet" />
+    <link href="content/angular-material/angular-material.min.css" rel="stylesheet" />
+    <link href="content/site.css" rel="stylesheet" />
+    <link href="content/loading-bar.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation" data-ng-controller="indexController">
+        <div class="container">
+            <div class="navbar-header">
+                <button class="btn btn-success navbar-toggle" data-ng-click="navbarExpanded = !navbarExpanded">
+                    <span class="glyphicon glyphicon-chevron-down"></span>
+                </button>
+                <a class="navbar-brand" href="#/">Əsas səhifə</a>
+            </div>
+            <div class="collapse navbar-collapse" data-collapse="!navbarExpanded">
+                <ul class="nav navbar-nav navbar-right">
+                    <li data-ng-hide="!authentication.isAuth"><a href="#">Xoş gəldin: {{authentication.userName}}</a></li>
+                    <li class="ng-hide" data-ng-show="authentication.isAuth && authentication.departmentCode==0"><a href="#/admin">Administrator</a></li>
+                    <li data-ng-hide="!authentication.isAuth"><a href="" data-ng-click="logOut()">Çıxış</a></li>
+                    <li data-ng-hide="authentication.isAuth"> <a href="#/login">Daxil ol</a></li>
+                    <li data-ng-hide="authentication.isAuth"> <a href="#/signup">Qeydiyyatdan keç</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="jumbotron">        
+    </div>-->
+    <div class="container">
+        <div data-ng-view="">
+        </div>
+    </div>
+    <hr />
+    <div id="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">                   
+                </div>
+                <div class="col-md-6">
+                    <p class="text-muted">Copyright: Aztelekom MMC Powered by ISMAYIL ISMAYILOV: <a target="_blank" href="http://twitter.com/iselfor">@iselfor</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 3rd party libraries -->
+    <script src="Scripts/angular.js"></script>
+    <script src="Scripts/angular-route.js"></script>
+    <script src="scripts/angular-local-storage.min.js"></script>
+    <script src="scripts/loading-bar.min.js"></script>
+    <script src="Scripts/angular-animate.min.js"></script>
+    <script src="Scripts/angular-aria.js"></script>
+    <script src="Scripts/angular-material.min.js"></script>
+    <!-- Load app main script -->
+    <script src="app/app.js"></script>
+    <!-- Load services -->
+    <script src="app/services/authInterceptorService.js"></script>
+    <script src="app/services/authService.js"></script>
+    <script src="app/services/valuesService.js"></script>
+    <script src="app/services/adminService.js"></script>
+    <script src="app/services/rootService.js"></script>
+    <!-- Load controllers -->
+    <script src="app/controllers/indexController.js"></script>
+    <script src="app/controllers/loginController.js"></script>
+    <script src="app/controllers/signupController.js"></script>
+    <script src="app/controllers/valuesController.js"></script>
+    <script src="app/controllers/adminController.js"></script>
+    <script src="app/controllers/rootController.js"></script>
+</body>
+</html>

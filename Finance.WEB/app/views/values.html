@@ -1,0 +1,163 @@
+﻿<div class="row"></div>
+<div layout-gt-sm="row">
+    <div flex="15">
+        <div>
+            <h3>Tarixlər</h3>
+            <ul class="nav nav-pills nav-stacked dates">
+                <li ng-repeat="dates in departmentDates | orderBy:'dates.dates':true"
+                    ng-click="valuesSetLi($index,dates.id)"
+                    ng-class="{ active:valuesIsSetLi($index) }"
+                    ng-init="$first?valuesSetLi($index,dates.id):''">
+                    <a href="">{{dates.description}}</a>
+                </li>
+            </ul>
+        </div>
+        <div ng-show="authDepartmentCode==0">
+            <h3>Müəssisələr</h3>
+            <ul class="nav nav-pills nav-stacked dates">
+                <li ng-repeat="department in departmentList | orderBy:'department.departmentName'"
+                    ng-click="valuesSetDepartment($index,department.departmentCode)"
+                    ng-class="{ active:valuesIsSetDepartment($index) }">
+                    <a href="">{{department.departmentName}}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div flex="1"></div>
+    <div flex="80" ng-controller="newValuesController as newCtrl">
+        <h3>Debitor Kreditor</h3>
+        <section>
+            <div ng-cloak>
+                <md-content>
+
+                    <md-tabs class="md-bar" md-dynamic-height md-border-bottom>
+                        <md-tab label="Debit (250)">
+                            <md-content class="md-padding">
+                                <table class="table table-striped table-bordered table-hover lastCenter">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Struktur (xidmət)</th>
+                                            <th>Məbləğ</th>
+                                            <th ng-hide="localLockStatus">sil</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="debit in debits" class="repeat-item">
+                                            <td>{{ $index+1 }}</td>
+                                            <td>{{ debit.title }}-{{debit.description}}</td>
+                                            <td>{{ debit.value | number:2}}</td>
+                                            <td ng-hide="localLockStatus">
+                                                <md-button n class="md-raised md-warn" ng-click="showConfirm($event,debit.id,$index,'debits')">
+                                                    <i class="glyphicon glyphicon-trash"></i> sil
+                                                </md-button>
+                                            </td>
+                                        </tr>
+                                        <tr><td colspan="2">Cəmi</td><td><b>{{totalRow('debits',dateId) | number:2}}</b></td><td ng-hide="localLockStatus"></td></tr>
+                                        <tr ng-hide="localLockStatus">
+                                            <td colspan="4">
+                                                <form novalidate name="reviewForm"
+                                                      ng-submit="reviewForm.$valid && newCtrl.addDebitKredit(newCtrl.debit,'debits')">
+                                                    <div layout-gt-sm="row">
+                                                        <div flex="60" class="md-select-backdrop">
+                                                            <md-select-container>
+                                                                <select required ng-model="newCtrl.debit.title" class="form-control" ng-options="val as (val.title + '-' + val.description)  for (key,val) in titles | orderBy : title | filter: { typeInt:250 } ">
+                                                                    <option value="">İstiqamati seçin</option>
+                                                                </select>
+                                                            </md-select-container>
+                                                        </div>
+                                                        <div flex="1"></div>
+                                                        <div flex="20">
+                                                            <md-input-container>
+                                                                <input class="form-control" required ng-model="newCtrl.debit.value" type="number" step="0.01" min="0" max="99999" />
+                                                            </md-input-container>
+                                                        </div>
+                                                        <div flex="1"></div>
+                                                        <div flex="10">
+                                                            <md-button class="md-primary md-raised" type="submit">
+                                                                <i class="glyphicon glyphicon-saved"></i> əlavə et
+                                                            </md-button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </md-content>
+                        </md-tab>
+                        <md-tab label="Kredit (630)">
+                            <md-content class="md-padding">
+                                <table class="table table-striped table-bordered table-hover lastCenter">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Struktur (xidmət)</th>
+                                            <th>Məbləğ</th>
+                                            <th ng-hide="localLockStatus">sil</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="kredit in kredits" class="repeat-item">
+                                            <td>{{ $index+1 }}</td>
+                                            <td>{{ kredit.title }}-{{kredit.description}}</td>
+                                            <td>{{ kredit.value | number:2}}</td>
+                                            <td ng-hide="localLockStatus">
+                                                <md-button n class="md-raised md-warn" ng-click="showConfirm($event,kredit.id,$index,'kredits')">
+                                                    <i class="glyphicon glyphicon-trash"></i> sil
+                                                </md-button>
+                                            </td>
+                                        </tr>
+                                        <tr><td colspan="2">Cəmi</td><td><b>{{totalRow('kredits',dateId) | number:2}}</b></td><td ng-hide="localLockStatus"></td></tr>
+                                        <tr ng-hide="localLockStatus">
+                                            <td colspan="4">
+                                                <form novalidate name="reviewForm"
+                                                      ng-submit="reviewForm.$valid && newCtrl.addDebitKredit(newCtrl.debit,'kredits')">
+                                                    <div layout-gt-sm="row">
+                                                        <div flex="60">
+                                                            <md-select-container>
+                                                                <select required ng-model="newCtrl.debit.title" class="form-control" ng-options="val as (val.title + '-' + val.description) for (key,val) in titles | orderBy : title | filter: { typeInt:630 } ">
+                                                                    <option value="">İstiqamati seçin</option>
+                                                                </select>
+                                                            </md-select-container>
+                                                        </div>
+                                                        <div flex="1"></div>
+                                                        <div flex="20">
+                                                            <md-input-container>
+                                                                <input class="form-control" required ng-model="newCtrl.debit.value" type="number" step="0.01" min="0" max="99999" />
+                                                            </md-input-container>
+                                                        </div>
+                                                        <div flex="1"></div>
+                                                        <div flex="10">
+                                                            <md-button class="md-primary md-raised" type="submit">
+                                                                <i class="glyphicon glyphicon-saved"></i> əlavə et
+                                                            </md-button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </md-content>
+                        </md-tab>
+                    </md-tabs>
+
+                    <md-content>
+                        <md-button ng-show="authDepartmentCode==0 && !remoteLockStatus && localLockStatus" style="margin:0 15px;" flex="20" class="md-warn md-raised pull-right" type="submit" ng-click="newCtrl.saveRemoteAll()">
+                            <i class="glyphicon glyphicon-save"></i> Təsdiqlə
+                        </md-button>
+                        <md-button flex="20" ng-hide="localLockStatus" class="md-primary md-raised pull-right" type="submit" ng-click="newCtrl.saveLocalAll()">
+                            <i class="glyphicon glyphicon-save"></i> Yadda saxla
+                        </md-button>
+                    </md-content>
+
+                </md-content>
+            </div>
+        </section>
+
+    </div>
+
+</div>
+
